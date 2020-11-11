@@ -5,22 +5,14 @@ export class FetchData extends Component {
 
   constructor(props) {
     super(props);
-    this.state = { forecasts: [], loading: true, simpleData: [] };
+    this.state = { forecasts: [], loading: true };
   }
 
   componentDidMount() {
       this.populateWeatherData();
-      this.populateSimpleData();
     }
 
-    static renderSimpleData(simpleData) {
-        return (
-            <ul>
-                {simpleData.map(item =>
-                    <li key={item.id}>{item.name}, {item.city}, {item.suburb }</li>)}
-            </ul>
-        );
-	}
+    
 
   static renderForecastsTable(forecasts) {
     return (
@@ -52,17 +44,13 @@ export class FetchData extends Component {
       ? <p><em>Loading...</em></p>
           : FetchData.renderForecastsTable(this.state.forecasts);
 
-      let simpleDataContent = this.state.simpleDataLoading
-          ? <p><em>Loading Simple Data...</em></p>
-          : FetchData.renderSimpleData(this.state.simpleData);
+      
 
     return (
       <div>
         <h1 id="tabelLabel" >Weather forecast</h1>
         <p>This component demonstrates fetching data from the server 123.</p>
             {contents}
-
-            {simpleDataContent}
       </div>
     );
   }
@@ -72,10 +60,4 @@ export class FetchData extends Component {
     const data = await response.json();
     this.setState({ forecasts: data, loading: false });
     }
-
-   async populateSimpleData() {
-       const response = await fetch('simpledata');
-       const data = await response.json();
-       this.setState({ simpleData: data });
-   }
 }
