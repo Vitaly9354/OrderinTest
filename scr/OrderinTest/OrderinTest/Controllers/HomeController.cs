@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using OrderinTest.Data;
 using OrderinTest.Models;
 
 namespace OrderinTest.Controllers
@@ -12,6 +13,7 @@ namespace OrderinTest.Controllers
 	public class HomeController : Controller
 	{
 		private readonly ILogger<HomeController> _logger;
+		private readonly IRepository<Restaurant> _repository;
 
 		public HomeController(ILogger<HomeController> logger)
 		{
@@ -21,7 +23,7 @@ namespace OrderinTest.Controllers
 		public IActionResult Index()
 		{
 			return View();
-		}
+		}	
 
 		public IActionResult Privacy()
 		{

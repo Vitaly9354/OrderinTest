@@ -10,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.SpaServices.Extensions;
 using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
+using OrderinTest.Data;
 
 namespace OrderinTest
 {
@@ -25,12 +26,21 @@ namespace OrderinTest
 		// This method gets called by the runtime. Use this method to add services to the container.
 		public void ConfigureServices(IServiceCollection services)
 		{
+			var options = new DataSettingsOptions();
+			Configuration.Bind(DataSettingsOptions.DataSettings, options);
+
+			services.Configure<DataSettingsOptions>(Configuration.GetSection(
+										DataSettingsOptions.DataSettings));
+
+			services.AddDataProvider(options.DataProvider);
+
 			services.AddControllersWithViews();
 
 			services.AddSpaStaticFiles(configuration => {
 				configuration.RootPath = "ClientApp/build";
 			});
 
+			
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
