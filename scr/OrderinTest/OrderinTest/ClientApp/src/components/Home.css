@@ -1,0 +1,5 @@
+﻿.menu-item { list-style-type: none; }
+
+.checkbox  input[type=checkbox] { margin-right: 5px; }
+
+.restaurant-name { color: grey; font-size: 110%; }
