@@ -22,10 +22,10 @@ namespace OrderinTest.Controllers
 			_searchService = searchService;
 		}
 
-		[HttpGet("{searchText?}")]
-		public async Task<IEnumerable<Restaurant>> Get(string searchText)
+		[HttpGet("{city}/{searchKeyword}")]
+		public async Task<IEnumerable<Restaurant>> Get(string searchKeyword, string city)
 		{
-			var data = await _searchService.FindByNameAsync(searchText);
+			var data = await _searchService.FindByNameAsync(searchKeyword, city);
 			return data;
 		}
 

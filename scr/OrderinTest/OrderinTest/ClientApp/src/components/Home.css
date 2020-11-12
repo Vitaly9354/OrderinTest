@@ -2,4 +2,8 @@
 
 .checkbox  input[type=checkbox] { margin-right: 5px; }
 
+.restaurant-container { list-style-type: none; }
+
 .restaurant-name { color: grey; font-size: 110%; }
+
+.img-and-name img { height: 60px; }

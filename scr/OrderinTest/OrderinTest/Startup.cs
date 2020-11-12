@@ -12,6 +12,8 @@ using Microsoft.AspNetCore.SpaServices.Extensions;
 using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using OrderinTest.Data;
 using OrderinTest.Service;
+using Microsoft.Extensions.FileProviders;
+using System.IO;
 
 namespace OrderinTest
 {
@@ -60,7 +62,12 @@ namespace OrderinTest
 				app.UseHsts();
 			}
 			app.UseHttpsRedirection();
-			app.UseStaticFiles();
+			app.UseStaticFiles(new StaticFileOptions
+			{
+				FileProvider = new PhysicalFileProvider(
+					Path.Combine(env.ContentRootPath, "RestaurantImages")),
+					RequestPath = "/RestaurantImages",					 
+			});
 
 			app.UseRouting();
 

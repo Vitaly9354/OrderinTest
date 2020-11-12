@@ -10,6 +10,6 @@ namespace OrderinTest.Service
 	{
 		IList<Restaurant> FindByName(string mealName);
 
-		Task<IList<Restaurant>> FindByNameAsync(string mealName);
+		Task<IList<Restaurant>> FindByNameAsync(string searchKeyword, string city);
 	}
 }

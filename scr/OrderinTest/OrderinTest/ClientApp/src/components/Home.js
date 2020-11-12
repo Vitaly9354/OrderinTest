@@ -6,19 +6,18 @@ import './Home.css'
 
 export class Home extends Component {
 	static displayName = Home.name;
-	static baseUrl = "api/data";
+	static baseUrl = "api/data";	
 
 	constructor(props) {
 		super(props);
-		this.state = { loading: true, data: [], orderData: [] };
+		this.state = { dataLoading: true, data: [], orderData: [], searchQuery: "", isValidFormat: false };
 
 		this.onSearchChange = this.onSearchChange.bind(this);
 		this.onCheckboxChange = this.onCheckboxChange.bind(this);
-		this.onCheckoutClick = this.onCheckoutClick.bind(this);
+		this.onCheckoutClick = this.onCheckoutClick.bind(this);	
 	}
 
 	componentDidMount() {
-		//this.populateData();
 	}
 
 	onCheckoutClick() {
@@ -26,12 +25,25 @@ export class Home extends Component {
 	}
 
 	onSearchChange(text) {
-		this.findByName(text);
+		text = text.trim();
+		
+		const regexp = RegExp('^[a-zA-Z]* in [a-zA-Z]*$');
+		//making sure that format is "<Search keyword> in <Loaction>
+		if (regexp.test(text)) {
+			this.setState({ searchQuery: text, isValidFormat: true });
+			const textSegments = text.split(' ');
+			const searchKeyword = textSegments[0];
+			const city = textSegments[2];
+
+			this.findByName(searchKeyword, city);
+		}
+		else {
+			this.setState({ searchQuery: text, isValidFormat: false });
+		}
 	}
 
 	onCheckboxChange(e, item) {
 		const isChecked = e.target.checked;
-
 		
 		const { orderData } = this.state;
 
@@ -53,8 +65,11 @@ export class Home extends Component {
 			<div>
 				<ul>
 					{data.map(item =>
-						<li key={item.id} className="restaurant">
-							<span className="restaurant-name">{item.name} - {item.suburb} - rated # {item.rank} overall </span>
+						<li key={item.id} className="restaurant-container">
+							<div className="img-and-name">
+								<img src={item.logoPath} alt="logo" className="restaurant-image" />
+								<span className="restaurant-name">{item.name} - {item.suburb} - rated # {item.rank} overall </span>
+							</div>
 							{this.renderCategories(item.categories)}
 						</li>)}
 				</ul>
@@ -95,30 +110,23 @@ export class Home extends Component {
 		);
 	}
 
-	render() {
-		let dataContent = this.state.dataLoading
-			? <p><em>Loading Data...</em></p>
-			: this.renderData(this.state.data);
+	render() {		
+
+		let dataContent = this.renderData(this.state.data);
 
 		return (
 			<div>
-				<h3>Hello World</h3>
-
+				
 				<SearchBox onChange={this.onSearchChange}/>
+			
 
 				{dataContent}
 			</div>
 		);
 	}
 
-	async populateData() {
-		const response = await fetch(Home.baseUrl);
-		const data = await response.json();
-		this.setState({ data: data });
-	}
-
-	async findByName(searchText) {
-		const response = await fetch(Home.baseUrl + "/" + searchText);
+	async findByName(searchKeyword, city) {		
+		const response = await fetch(`${Home.baseUrl}/${city}/${searchKeyword}`);
 		const data = await response.json();
 		this.setState({ data: data });
 	}
