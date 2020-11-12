@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using OrderinTest.Data;
 using OrderinTest.Models;
+using OrderinTest.Service;
 
 namespace OrderinTest.Controllers
 {
@@ -15,27 +16,27 @@ namespace OrderinTest.Controllers
 	public class SimpleDataController : ControllerBase
 	{
 		private readonly ILogger<HomeController> _logger;
-		private readonly IRepository<Restaurant> _repository;
+		private readonly ISearchService _searchService;
 
-		public SimpleDataController(ILogger<HomeController> logger, IRepository<Restaurant> repository)
+		public SimpleDataController(ILogger<HomeController> logger, ISearchService searchService)
 		{
 			_logger = logger;
-			_repository = repository;
+			_searchService = searchService;
 		}
-	
-		//[HttpGet]
-		//public async Task<IEnumerable<Restaurant>> GetAllItemsAsync()
-		//{
-		//	var data = await _repository.GetAllAsync();
-		//	return data;
-		//}
 
 		[HttpGet]
-		public IEnumerable<Restaurant> Get()
+		public async Task<IEnumerable<Restaurant>> Get()
 		{
-			var data = _repository.GetAll();
+			var data = await _searchService.FindByNameAsync("Taco");
 			return data;
 		}
+
+		//[HttpGet]
+		//public IEnumerable<Restaurant> Get()
+		//{
+		//	var data = _repository.GetAll();
+		//	return data;
+		//}
 
 		[Route("/error")]
 		[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]

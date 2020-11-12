@@ -11,6 +11,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.SpaServices.Extensions;
 using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using OrderinTest.Data;
+using OrderinTest.Service;
 
 namespace OrderinTest
 {
@@ -33,6 +34,8 @@ namespace OrderinTest
 										DataSettingsOptions.DataSettings));
 
 			services.AddDataProvider(options.DataProvider);
+
+			services.AddScoped<ISearchService, SearchService>();
 
 			services.AddControllersWithViews();
 

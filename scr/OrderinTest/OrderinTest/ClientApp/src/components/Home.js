@@ -12,11 +12,36 @@ export class Home extends Component {
 		this.populateSimpleData();
 	}
 
-	static renderSimpleData(simpleData) {
+	renderSimpleData(simpleData) {
 		return (
 			<ul>
 				{simpleData.map(item =>
-					<li key={item.id}>{item.name}, {item.city}, {item.suburb}</li>)}
+					<li key={item.id}>
+						{item.name} - {item.suburb} {item.rank}
+						{this.renderCategories(item.categories)}
+					</li>)}
+			</ul>
+		);
+	}
+
+	renderCategories(categories) {
+		return (
+			<ul>
+				{categories.map(c =>
+					<li>{c.name}
+						{this.renderMenuItems(c.menuItems)}
+					</li>)}
+			</ul>
+		);
+	}
+
+	renderMenuItems(menuItems) {
+		return (
+			<ul>
+				{menuItems.map(i =>
+				<li key={i.id}>{i.name}
+					{i.price}
+				</li>)}
 			</ul>
 		);
 	}
@@ -24,7 +49,7 @@ export class Home extends Component {
 	render() {
 		let simpleDataContent = this.state.simpleDataLoading
 			? <p><em>Loading Simple Data...</em></p>
-			: Home.renderSimpleData(this.state.simpleData);
+			: this.renderSimpleData(this.state.simpleData);
 
 		return (
 			<div>
