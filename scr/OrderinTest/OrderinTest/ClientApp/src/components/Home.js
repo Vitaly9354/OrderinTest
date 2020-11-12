@@ -10,7 +10,7 @@ export class Home extends Component {
 
 	constructor(props) {
 		super(props);
-		this.state = { dataLoading: true, data: [], orderData: [], searchQuery: "", isValidFormat: false };
+		this.state = { dataLoading: false, data: [], orderData: [], searchQuery: "", isValidFormat: false };
 
 		this.onSearchChange = this.onSearchChange.bind(this);
 		this.onCheckboxChange = this.onCheckboxChange.bind(this);
@@ -27,13 +27,15 @@ export class Home extends Component {
 	onSearchChange(text) {
 		text = text.trim();
 		
-		const regexp = RegExp('^[a-zA-Z]* in [a-zA-Z]*$');
+		const regexp = RegExp('^.* *in *.*$');
 		//making sure that format is "<Search keyword> in <Loaction>
 		if (regexp.test(text)) {
 			this.setState({ searchQuery: text, isValidFormat: true });
-			const textSegments = text.split(' ');
-			const searchKeyword = textSegments[0];
-			const city = textSegments[2];
+
+			//parse input text
+			const i = text.toLowerCase().indexOf("in");
+			const searchKeyword = text.substring(0, i).trim();
+			const city = text.substring(i + 2, text.length).trim()
 
 			this.findByName(searchKeyword, city);
 		}
@@ -63,7 +65,7 @@ export class Home extends Component {
 	renderData(data) {
 		return (
 			<div>
-				<ul>
+				<ul className="restaurant-list">
 					{data.map(item =>
 						<li key={item.id} className="restaurant-container">
 							<div className="img-and-name">
@@ -112,7 +114,9 @@ export class Home extends Component {
 
 	render() {		
 
-		let dataContent = this.renderData(this.state.data);
+		let dataContent = this.state.dataLoading 
+			? <p><em>Loading Data...</em></p>
+			:  this.renderData(this.state.data);
 
 		return (
 			<div>
@@ -126,8 +130,11 @@ export class Home extends Component {
 	}
 
 	async findByName(searchKeyword, city) {		
+		this.setState({ dataLoading: true });
+
 		const response = await fetch(`${Home.baseUrl}/${city}/${searchKeyword}`);
 		const data = await response.json();
-		this.setState({ data: data });
+
+		this.setState({ data: data, dataLoading: false });
 	}
 }

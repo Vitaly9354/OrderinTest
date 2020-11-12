@@ -6,4 +6,8 @@
 
 .restaurant-name { color: grey; font-size: 110%; }
 
-.img-and-name img { height: 60px; }
+.restaurant-list { padding-left: 0; margin-top: 50px;}
+
+.img-and-name img {
+	height: 60px;
+}
