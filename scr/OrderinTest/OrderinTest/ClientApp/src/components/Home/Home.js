@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import { SearchBox } from './SearchBox';
-import { CheckoutButton } from './CheckoutButton';
+import { SearchBox } from './../SearchBox/SearchBox';
+import { CheckoutButton } from './../CheckoutButton/CheckoutButton'
 
-import './Home.css'
+import './../Home/Home.css'
 
 export class Home extends Component {
 	static displayName = Home.name;
@@ -119,10 +119,8 @@ export class Home extends Component {
 			:  this.renderData(this.state.data);
 
 		return (
-			<div>
-				
-				<SearchBox onChange={this.onSearchChange}/>
-			
+			<div className="content">				
+				<SearchBox onChange={this.onSearchChange} />	
 
 				{dataContent}
 			</div>

@@ -1,6 +1,8 @@
 import React from 'react';
 import AwesomeDebouncePromise from 'awesome-debounce-promise';
 
+import './../SearchBox/SearchBox.css';
+
 export const SearchBox = ({ onChange }) => {
 	const debouncedOnChange = AwesomeDebouncePromise(onChange, 1000)
 
