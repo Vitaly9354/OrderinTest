@@ -10,7 +10,7 @@ export class Home extends Component {
 
 	constructor(props) {
 		super(props);
-		this.state = { dataLoading: false, data: [], orderData: [], searchQuery: "", isValidFormat: false };
+		this.state = { dataLoading: false, data: [], orderData: [], searchKeyword: "", city: "", isSearchQueryValid: false };
 
 		this.onSearchChange = this.onSearchChange.bind(this);
 		this.onCheckboxChange = this.onCheckboxChange.bind(this);
@@ -20,27 +20,46 @@ export class Home extends Component {
 	componentDidMount() {
 	}
 
-	onCheckoutClick() {
-		alert("AJAX REQUEST!")
+	async onCheckoutClick() {
+		const response = await this.submitOrder(this.state.orderData);
+		if (response.message) {
+			alert(response.message);
+		}
+	}
+
+	parseSearchQuery(text) {
+		const textSegments = text.toLowerCase().split(' in ');
+		if (textSegments.length === 2) {
+			return {
+				searchKeyword: textSegments[0].trim(),
+				city: textSegments[1].trim()
+			}
+		}
+		else
+			return null;
 	}
 
 	onSearchChange(text) {
 		text = text.trim();
 		
-		const regexp = RegExp('^.* *in *.*$');
+		const parsedQuery = this.parseSearchQuery(text);
 		//making sure that format is "<Search keyword> in <Loaction>
-		if (regexp.test(text)) {
-			this.setState({ searchQuery: text, isValidFormat: true });
+		if (parsedQuery !== null) {
+			
+			this.findByName(parsedQuery.searchKeyword, parsedQuery.city);
 
-			//parse input text
-			const i = text.toLowerCase().indexOf("in");
-			const searchKeyword = text.substring(0, i).trim();
-			const city = text.substring(i + 2, text.length).trim()
-
-			this.findByName(searchKeyword, city);
+			this.setState({
+				searchKeyword: parsedQuery.searchKeyword,
+				city: parsedQuery.city,
+				isSearchQueryValid: true
+			});
 		}
 		else {
-			this.setState({ searchQuery: text, isValidFormat: false });
+			this.setState({
+				searchKeyword: "",
+				city: "",
+				isSearchQueryValid: false
+			});
 		}
 	}
 
@@ -63,8 +82,23 @@ export class Home extends Component {
 	}
 
 	renderData(data) {
+		let resultSummaryContent;
+		
+		if (data.length) {
+			//show found resutls
+			resultSummaryContent = <span><em><b>{this.state.searchKeyword}</b></em> restaurants in <em><b>{this.state.city}</b></em> we found for you:</span>
+		}		
+		else if (this.state.isSearchQueryValid && data.length === 0) {
+			//looks that nothing found by the query
+			resultSummaryContent = <span> <em><b>{this.state.searchKeyword} </b></em> was not found in <em><b>{this.state.city}</b></em></span>
+		}
+
 		return (
 			<div>
+				<div className="results-summary">
+					{resultSummaryContent}
+				</div>
+
 				<ul className="restaurant-list">
 					{data.map(item =>
 						<li key={item.id} className="restaurant-container">
@@ -83,17 +117,22 @@ export class Home extends Component {
 	renderCategories(categories) {
 		return (
 			<ul>
-				{categories.map(c =>
-					<li key={c.name} className="category-name">{c.name}
+				{categories.map(c => {
+					const showCategory = c.name.toLowerCase().indexOf(this.state.searchKeyword.toLowerCase()) === -1;
+
+					return (<li key={c.name} className="category">
+						{!showCategory ? <span className="category-name">{c.name}</span> : ""}
 						{this.renderMenuItems(c.menuItems)}
-					</li>)}
+					</li>)
+				})
+				}
 			</ul>
 		);
 	}
 
 	renderMenuItems(menuItems) {
 		return (
-			<ul>
+			<ul className="menu-item-list">
 				{menuItems.map(i =>
 					<li key={i.id} className="menu-item">
 						<div className="checkbox">
@@ -125,6 +164,18 @@ export class Home extends Component {
 				{dataContent}
 			</div>
 		);
+	}
+
+	async submitOrder(orderData) {
+		const response = await fetch(`${Home.baseUrl}/submitorder`, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json;charset=utf-8'
+			},
+			body: JSON.stringify(orderData)
+		});
+		const data = await response.json();
+		return data;
 	}
 
 	async findByName(searchKeyword, city) {		

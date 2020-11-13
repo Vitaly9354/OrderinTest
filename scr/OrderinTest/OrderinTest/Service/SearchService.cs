@@ -31,18 +31,17 @@ namespace OrderinTest.Service
 
 			foreach(var g in groupsOrdered)
 			{
-				var filteredAndOrderedByRank = g.Select(x => new Restaurant()
-				{
+				var filteredAndOrderedByRank = g.Select(x => new Restaurant()	{
 						Id = x.Id,
 						Name = x.Name,
 						City = x.City,
 						Suburb = x.Suburb,
 						Rank = x.Rank,
 						LogoPath = x.LogoPath,
-						Categories = x.Categories.FindAll(c => c.Name.Contains(searchKeyword, StringComparison.InvariantCultureIgnoreCase)).Union(x.Categories.FindAll(c => !c.Name.Contains(searchKeyword, StringComparison.InvariantCultureIgnoreCase)).Select(x => new Category { Name = x.Name, MenuItems = x.MenuItems.FindAll(mi => mi.Name.Contains(searchKeyword, StringComparison.InvariantCultureIgnoreCase)) })).ToList()
+						Categories = x.Categories.FindAll(c => c.Name.Contains(searchKeyword, StringComparison.InvariantCultureIgnoreCase)).Union(x.Categories.FindAll(c => !c.Name.Contains(searchKeyword, StringComparison.InvariantCultureIgnoreCase)).Select(x => new Category { Name = x.Name, MenuItems = x.MenuItems.FindAll(mi => mi.Name.Contains(searchKeyword, StringComparison.InvariantCultureIgnoreCase)) })).Where(c => c.MenuItems.Count > 0).ToList()
 				})
-					.Where(x => x.City.Contains(city, StringComparison.InvariantCultureIgnoreCase))
-					.OrderBy(x => x.Rank);
+				.Where(x => x.City.Contains(city, StringComparison.InvariantCultureIgnoreCase))
+				.OrderBy(x => x.Rank);
 
 				results.AddRange(filteredAndOrderedByRank);
 			}

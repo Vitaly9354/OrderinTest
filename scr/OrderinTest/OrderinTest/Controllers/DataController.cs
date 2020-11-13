@@ -29,6 +29,14 @@ namespace OrderinTest.Controllers
 			return data;
 		}
 
+		[HttpPost("submitorder")]
+		public object SubmitOrder([FromBody]IList<MenuItem> orderedItems)
+		{
+			//string responseTxt = "Your order "
+
+			return new { Message = "Your order has been placed!Leave the rest up to the chefs and out drivers" };
+		}
+
 		[Route("/error")]
 		[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
 		public IActionResult Error() => Problem();

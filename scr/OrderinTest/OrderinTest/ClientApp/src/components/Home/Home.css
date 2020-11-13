@@ -2,7 +2,20 @@
 
 .checkbox  input[type=checkbox] { margin-right: 5px; }
 
-.restaurant-container { list-style-type: none; margin-bottom: 20px; }
+.category { list-style-type: none; padding-left: 0; }
+
+.category-name { font-weight: bold; }
+
+.restaurant-container {
+	list-style-type: none;
+	margin-bottom: 20px;
+}
+
+.results-summary { margin: 15px 0 15px 0; }
+
+.menu-item-list {
+	margin-top: 5px;
+}
 
 .restaurant-name { color: grey; font-size: 120%; padding-left: 20px; }
 
