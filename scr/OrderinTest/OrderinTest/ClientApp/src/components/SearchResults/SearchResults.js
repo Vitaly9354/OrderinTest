@@ -52,7 +52,7 @@ export class SearchResults extends Component {
 		const parsedQuery = this.parseSearchQuery(text.trim());
 
 		if (parsedQuery !== null) {
-			this.findByName(parsedQuery.searchKeyword, parsedQuery.city);
+			this.findByNameAndCity(parsedQuery.searchKeyword, parsedQuery.city);
 
 			this.setState({
 				searchKeyword: parsedQuery.searchKeyword,
@@ -62,7 +62,8 @@ export class SearchResults extends Component {
 		else {
 			this.setState({
 				searchKeyword: "",
-				city: ""
+				city: "",
+				data: []
 			});
 		}
 	}
@@ -117,7 +118,7 @@ export class SearchResults extends Component {
 		return data;
 	}
 
-	async findByName(searchKeyword, city) {		
+	async findByNameAndCity(searchKeyword, city) {		
 		this.setState({ dataLoading: true });
 
 		const response = await fetch(`${SearchResults.baseUrl}/${city}/${searchKeyword}`);
