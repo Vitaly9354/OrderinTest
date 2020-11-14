@@ -13,11 +13,11 @@ namespace OrderinTest.Controllers
 {
 	[ApiController]
 	[Route("api/[controller]")]
-	public class DataController : ControllerBase
+	public class SearchController : ControllerBase
 	{
 		private readonly ISearchService _searchService;
 
-		public DataController(ISearchService searchService)
+		public SearchController(ISearchService searchService)
 		{
 			_searchService = searchService;
 		}
@@ -32,9 +32,11 @@ namespace OrderinTest.Controllers
 		[HttpPost("submitorder")]
 		public object SubmitOrder([FromBody]IList<MenuItem> orderedItems)
 		{
-			//string responseTxt = "Your order "
+			var orderTotal = orderedItems.Select(x => x.Price).Sum();
 
-			return new { Message = "Your order has been placed!Leave the rest up to the chefs and out drivers" };
+			return new { 
+				Message = $"Your order R{orderTotal} has been placed!Leave the rest up to the chefs and our drivers!" 
+			};
 		}
 
 		[Route("/error")]
