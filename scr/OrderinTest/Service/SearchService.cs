@@ -13,19 +13,15 @@ namespace OrderinTest.Service
 		{
 			_repository = repository;
 		}
-		public IList<Restaurant> FindByName(string mealName)
+		public IList<Restaurant> FindByKeywordAndCity(string searchKeyword, string city)
 		{			
 			throw new NotImplementedException();
 		}
-		public async Task<IList<Restaurant>> FindByNameAsync(string searchKeyword, string city)
+		public async Task<IList<Restaurant>> FindByKeywordAndCityAsync(string searchKeyword, string city)
 		{
 			var restaurants = await _repository.GetAllAsync();
 			var results = new List<Restaurant>();
 			
-			//it is guaranteed at client side that searchText arrives in format "<Search keryword> in <City>"
-			//so we can safely parse it now
-			
-
 			var groups = restaurants.GroupBy(r => r.Categories.FindAll(c => c.Name.Contains(searchKeyword, StringComparison.InvariantCultureIgnoreCase)).SelectMany(m => m.MenuItems).Count() + r.Categories.FindAll(c => !c.Name.Contains(searchKeyword, StringComparison.InvariantCultureIgnoreCase)).SelectMany(m => m.MenuItems).Where(i => i.Name.Contains(searchKeyword, StringComparison.InvariantCultureIgnoreCase)).Count());
 			var groupsOrdered = groups.OrderByDescending(g => g.Key).Where(g => g.Key > 0);
 

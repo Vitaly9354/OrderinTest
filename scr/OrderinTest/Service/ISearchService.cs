@@ -8,8 +8,8 @@ namespace OrderinTest.Service
 {
 	public interface ISearchService
 	{
-		IList<Restaurant> FindByName(string mealName);
+		IList<Restaurant> FindByKeywordAndCity(string searchKeyword, string city);
 
-		Task<IList<Restaurant>> FindByNameAsync(string searchKeyword, string city);
+		Task<IList<Restaurant>> FindByKeywordAndCityAsync(string searchKeyword, string city);
 	}
 }

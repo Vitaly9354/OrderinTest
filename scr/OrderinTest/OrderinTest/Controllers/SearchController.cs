@@ -25,7 +25,7 @@ namespace OrderinTest.Controllers
 		[HttpGet("{city}/{searchKeyword}")]
 		public async Task<IEnumerable<Restaurant>> Get(string searchKeyword, string city)
 		{
-			var data = await _searchService.FindByNameAsync(searchKeyword, city);
+			var data = await _searchService.FindByKeywordAndCityAsync(searchKeyword, city);
 			return data;
 		}
 
