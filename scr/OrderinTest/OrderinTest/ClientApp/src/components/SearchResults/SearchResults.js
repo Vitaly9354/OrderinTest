@@ -1,8 +1,6 @@
 import React, { Component } from 'react';
 import { SearchBox } from '../SearchBox/SearchBox';
-import { CheckoutButton } from '../CheckoutButton/CheckoutButton'
-
-import './SearchResults.css'
+import { SearchResultsList } from '../SearchResultsList/SearchResultsList';
 
 export class SearchResults extends Component {
 	static displayName = SearchResults.name;
@@ -85,79 +83,19 @@ export class SearchResults extends Component {
 		}		
 	}
 
-	renderData(data) {
-		let resultSummaryContent;
-		
-		if (data.length) {
-			//show found resutls
-			resultSummaryContent = <span><em><b>{this.state.searchKeyword}</b></em> restaurants in <em><b>{this.state.city}</b></em> we found for you:</span>
-		}		
-		else if (this.isSearchQueryValid() && data.length === 0) {
-			//looks that nothing found by the query
-			resultSummaryContent = <span><em><b>{this.state.searchKeyword} </b></em> was not found in <em><b>{this.state.city}</b></em></span>
-		}
-
-		return (
-			<div>
-				<div className="results-summary">
-					{resultSummaryContent}
-				</div>
-
-				<ul className="restaurant-list">
-					{data.map(item =>
-						<li key={item.id} className="restaurant-container">
-							<div className="img-and-name">
-								<img src={item.logoPath} alt="logo" className="restaurant-image" />
-								<span className="restaurant-name">{item.name} - {item.suburb} - rated # {item.rank} overall </span>
-							</div>
-							{this.renderCategories(item.categories)}
-						</li>)}
-				</ul>
-				<CheckoutButton orderData={this.state.orderData} onClick={this.onCheckoutClick} />
-			</div>
-		);
-	}
-
-	renderCategories(categories) {
-		return (
-			<ul>
-				{categories.map(c => {
-					const showCategory = c.name.toLowerCase().indexOf(this.state.searchKeyword.toLowerCase()) === -1;
-
-					return (<li key={c.name} className="category" title={c.name}>
-						{!showCategory ? <span className="category-name">{c.name}</span> : ""}
-						{this.renderMenuItems(c.menuItems)}
-					</li>)
-				})
-				}
-			</ul>
-		);
-	}
-
-	renderMenuItems(menuItems) {
-		return (
-			<ul className="menu-item-list">
-				{menuItems.map(i =>
-					<li key={i.id} className="menu-item">
-						<div className="checkbox">
-							<label>
-								<input
-									type="checkbox"
-									value={`${i.name} - R${i.price}`}
-									onChange={(e) => { this.onCheckboxChange(e, i) }}
-								/>
-								{`${i.name} - R${i.price}`}
-							</label>
-						</div>
-					</li>)}
-			</ul>
-		);
-	}
-
+	
 	render() {
+		const { data } = this.state;
+
 		let dataContent = this.state.dataLoading 
 			? <p><em>Loading Data...</em></p>
-			:  this.renderData(this.state.data);
+			: <SearchResultsList data={data}
+				orderData={this.state.orderData}
+				onCheckoutClick={this.onCheckoutClick}
+				onCheckboxChange={this.onCheckboxChange}
+				searchKeyword={this.state.searchKeyword}
+				city={this.state.city}
+				isSearchQueryValid={this.isSearchQueryValid()}/> 
 
 		return (
 			<div className="content">				
